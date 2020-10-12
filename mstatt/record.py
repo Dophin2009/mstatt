@@ -3,8 +3,11 @@ from __future__ import annotations
 import enum
 import re
 from datetime import datetime as DateTime
+from datetime import timedelta
 from typing import Dict
 from typing import List
+from typing import Optional
+from typing import Union
 
 from exception import ParseException
 
@@ -75,11 +78,30 @@ class UserRecord:
 class User:
     def __init__(self, name: str, records: List[UserRecord]):
         self.name = name
-        self.records = records
+        self.records = sorted(records, key=lambda r: r.timestamp)
+
+        if len(self.records) == 0:
+            self.final_status = RecordStatus.LEFT
+        else:
+            self.final_status = self.records[len(self.records) - 1].status
 
     def __repr__(self):
         fmt = 'User(name = \'{name}\', records={records})'
         return fmt.format(name=self.name, records=self.records)
+
+    def first_joined(self) -> Optional[UserRecord]:
+        return next(r for r in self.records if r.status == RecordStatus.JOINED)
+
+    def last_left(self) -> Optional[UserRecord]:
+        return next(r for r in reversed(self.records)
+                    if r.status == RecordStatus.LEFT)
+
+    def durations(self) -> List[timedelta]:
+        return [b.timestamp - a.timestamp
+                for a, b in zip(self.records[::2], self.records[1::2])]
+
+    def total_duration(self) -> timedelta:
+        return sum(self.durations(), timedelta())
 
     @classmethod
     def from_record_list(cls, records: List[Record]) -> User:
