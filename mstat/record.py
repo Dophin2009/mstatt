@@ -79,11 +79,6 @@ class User:
         self.name = name
         self.records = sorted(records, key=lambda r: r.timestamp)
 
-        if len(self.records) == 0:
-            self.final_status = RecordStatus.LEFT
-        else:
-            self.final_status = self.records[len(self.records) - 1].status
-
     def __repr__(self):
         fmt = 'User(name = \'{name}\', records={records})'
         return fmt.format(name=self.name, records=self.records)
@@ -101,6 +96,12 @@ class User:
 
     def total_duration(self) -> timedelta:
         return sum(self.durations(), timedelta())
+
+    def final_status(self) -> RecordStatus:
+        if len(self.records) == 0:
+            return RecordStatus.LEFT
+        else:
+            return self.records[len(self.records) - 1].status
 
     @classmethod
     def from_record_list(cls, records: List[Record]) -> User:
