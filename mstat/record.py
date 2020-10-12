@@ -84,11 +84,18 @@ class User:
         return fmt.format(name=self.name, records=self.records)
 
     def first_joined(self) -> Optional[UserRecord]:
-        return next(r for r in self.records if r.status == RecordStatus.JOINED)
+        try:
+            return next(r for r in self.records
+                        if r.status == RecordStatus.JOINED)
+        except StopIteration:
+            return None
 
     def last_left(self) -> Optional[UserRecord]:
-        return next(r for r in reversed(self.records)
-                    if r.status == RecordStatus.LEFT)
+        try:
+            return next(r for r in reversed(self.records)
+                        if r.status == RecordStatus.LEFT)
+        except StopIteration:
+            return None
 
     def durations(self) -> List[timedelta]:
         return [b.timestamp - a.timestamp
