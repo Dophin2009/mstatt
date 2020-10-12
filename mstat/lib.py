@@ -3,8 +3,8 @@ from __future__ import annotations
 import csv
 from typing import List
 
-from record import Record
-from record import User
+from .record import Record
+from .record import User
 
 
 def __read_rows(filename: str, encoding='utf-8') -> List[List[str]]:
