@@ -8,7 +8,7 @@ from typing import Dict
 from typing import List
 from typing import Optional
 
-from .exception import ParseException
+from mstat.exception import ParseException
 
 
 class RecordStatus(enum.Enum):
