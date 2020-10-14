@@ -4,8 +4,8 @@ import csv
 from typing import List
 from typing import TextIO
 
-from .record import Record
-from .record import User
+from mstat.record import Record
+from mstat.record import User
 
 
 def __read_rows(file: TextIO) -> List[List[str]]:
